@@ -28,7 +28,7 @@
         }
     },
     "scripts": {
-        "fix": "php-cs-fixer fix",
+        "fix": "php8 vendor/bin/php-cs-fixer fix",
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ]
