@@ -23,6 +23,7 @@ class TroubleshootingsDTO implements DTOFromRequest
                 podrId: $item['predId'],
                 objOsnId: $item['predId'],
                 type: $item['predId'],
+                value: $item['value'],
             );
         }
         return new self($arrayOfDTOs);

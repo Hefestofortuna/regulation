@@ -6,11 +6,13 @@ use Illuminate\Http\Request;
 
 class TroubleshootingDTO implements DTOFromRequest
 {
+
     public function __construct(
         public ?int $predId,
         public ?int $podrId,
         public ?int $objOsnId,
         public ?string $type,
+        public ?string $value,
     ) {
     }
 
@@ -21,6 +23,7 @@ class TroubleshootingDTO implements DTOFromRequest
             $request->input('podr_id'),
             $request->input('obj_osn_id'),
             $request->input('type'),
+            $request->input('value'),
         );
     }
 }

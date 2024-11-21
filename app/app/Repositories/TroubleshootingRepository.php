@@ -180,16 +180,16 @@ class TroubleshootingRepository implements Repository
         );
     }
 
-    public function updateReglament($existingReglament, string $newValue): void
+    public function updateReglament(array $existingReglament, string $newValue): void
     {
         DB::update(
             "UPDATE dbo.mtrx_reglament SET finish_date='" . date('Y-m-d H:i:s') . "' WHERE (pred_id=? and podr_id=? and obj_osn_id=? and reglamenttype=? and record_num=?);",
             [
-                $existingReglament->pred_id,
-                $existingReglament->podr_id,
-                $existingReglament->obj_osn_id,
-                $existingReglament->reglamenttype,
-                $existingReglament->record_num
+                $existingReglament['pred_id'],
+                $existingReglament['podr_id'],
+                $existingReglament['obj_osn_id'],
+                $existingReglament['reglamenttype'],
+                $existingReglament['record_num']
             ]
         );
 
@@ -208,14 +208,14 @@ class TroubleshootingRepository implements Repository
         );
     }
 
-    public function insertReglament($item, int $recordNum): void
+    public function insertReglament(TroubleshootingDTO $item, int $recordNum): void
     {
         DB::insert(
             "INSERT INTO dbo.mtrx_reglament(pred_id, podr_id, obj_osn_id, reglamenttype, record_num, reglamenttime, start_date, finish_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
             [
-                $item->pred_id,
-                $item->podr_id,
-                $item->obj_osn_id,
+                $item->predId,
+                $item->podrId,
+                $item->objOsnId,
                 $item->type,
                 $recordNum,
                 $item->value,
