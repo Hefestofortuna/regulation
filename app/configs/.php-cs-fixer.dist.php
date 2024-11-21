@@ -14,5 +14,6 @@ return (new Config())
         '@PSR12' => true,
         'strict_param' => true,
         'array_syntax' => ['syntax' => 'short'],
+        'no_unused_imports' => true
     ])
     ->setFinder($finder);

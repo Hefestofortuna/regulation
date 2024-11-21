@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 
-class DeliveryController extends Controller
+class DeliveryController extends ApiController
 {
     public function getHistory(Request $request): JsonResponse
     {

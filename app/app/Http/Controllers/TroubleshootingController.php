@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
+use Laravel\Lumen\Routing\Controller;
 
 class TroubleshootingController extends Controller
 {

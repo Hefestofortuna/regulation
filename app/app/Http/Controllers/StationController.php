@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
+use App\Repositories\StationRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
-class StationController extends Controller
+class StationController extends ApiController
 {
-    public function list(Request $request): JsonResponse
+    public function __construct(
+        private StationRepository $stationRepository
+    ) {
+    }
+    public function list(Request $request): Response
     {
-        $result = DB::select(
-            "select asu_obj_dis.pred_id, asu_obj_osn_inf.obj_osn_id, asu_obj_osn_inf.name from dbo.asu_obj_osn_inf left join dbo.asu_obj_dis on asu_obj_osn_inf.obj_osn_id = asu_obj_dis.obj_osn_id where asu_obj_dis.pred_id=? order by asu_obj_osn_inf.name",
-            [
-                $request->input("pred_id")
-            ]
-        );
-        return response()->json($result);
+        $this->validate($request, ['pred_id' => 'required|integer']);
+        $result = $this->stationRepository->findAllForPred($request->input("pred_id"));
+        return $this->successResponse($result);
     }
 
 }

@@ -24,6 +24,6 @@ $router->group(['prefix' => 'delivery'], function () use ($router) {
     $router->get('history','DeliveryController@getHistory');
 });
 $router->group(['prefix' => 'employee_specialization'], function() use ($router){
-    $router->get('user', 'SpecializationController@getUser');
-    $router->get('brigade', 'SpecializationController@getBrigade');
+    $router->get('user', 'SpecializationController@user');
+    $router->get('brigade', 'SpecializationController@brigade');
 });
