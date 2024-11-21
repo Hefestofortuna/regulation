@@ -28,10 +28,7 @@
         }
     },
     "scripts": {
-        "fix": "php8 vendor/bin/php-cs-fixer fix",
-        "post-root-package-install": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-        ]
+        "fix": "php8 vendor/bin/php-cs-fixer fix --config configs/.php-cs-fixer.dist.php --cache-file storage/cs/cs-fix.cache"
     },
     "config": {
         "optimize-autoloader": true,

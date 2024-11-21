@@ -4,10 +4,9 @@ use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
 
 $finder = Finder::create()
-    ->in(__DIR__ . '/app')
+    ->in(__DIR__ . '/../app')
     ->name('*.php')
-    ->exclude(['vendor'])
-    ->notName('*.blade.php');
+    ->exclude(['/../vendor']);
 
 return (new Config())
     ->setRiskyAllowed(true)

@@ -30,4 +30,5 @@ RUN echo 'zend_extension=xdebug' >> /etc/php8/php.ini &&\
 COPY entrypoint.sh /
 RUN dos2unix entrypoint.sh
 RUN chmod +x entrypoint.sh
+WORKDIR /app/
 ENTRYPOINT [ "/entrypoint.sh"]

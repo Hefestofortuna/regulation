@@ -19,9 +19,9 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}_database
     environment:
       TZ: Europe/Moscow
-      POSTGRES_DB: "database"
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
