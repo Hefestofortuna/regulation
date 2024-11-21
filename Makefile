@@ -15,7 +15,7 @@ help: ## Показывает справку по Makefile
 	@printf "\033[33m%s:\033[0m\n" 'Доступные команды'
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  \033[32m%-18s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-init: start init/no-database init/env init/composer data/migration ## Инициализация проекта
+init: start init/env init/composer ## Инициализация проекта
 
 init/env: ## Генерация .env
 	$(DOCKER_COMPOSE) exec -T app cp .env.example .env
@@ -31,12 +31,6 @@ init/env: ## Генерация .env
 
 init/composer: ## Инициализация composer
 	$(DOCKER_COMPOSE) exec -T app composer install
-
-init/no-database: ## Инициализация проекта без БД
-	#$(DOCKER_COMPOSE) up -d
-
-data/migration: ## Инициализация фикстур
-	$(DOCKER_COMPOSE) exec -T app
 
 start: ## Запуск контейнеров
 	$(DOCKER_COMPOSE) up -d

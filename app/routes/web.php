@@ -14,9 +14,9 @@ $router->group(['prefix' => 'devices'], function() use ($router) {
 });
 
 $router->group(['prefix' => 'troubleshooting'], function() use ($router) {
-    $router->put('', 'TroubleshootingController@putData');
-    $router->get('', 'TroubleshootingController@getData');
-    $router->get('history', 'TroubleshootingController@getHistory');
+    $router->put('', 'TroubleshootingController@update');
+    $router->get('', 'TroubleshootingController@list');
+    $router->get('history', 'TroubleshootingController@history');
 });
 $router->group(['prefix' => 'delivery'], function () use ($router) {
     $router->get('', 'DeliveryController@getTimes');
