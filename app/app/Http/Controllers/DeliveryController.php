@@ -5,19 +5,11 @@ namespace App\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use  Illuminate\Http\JsonResponse;
 
 class DeliveryController extends Controller
 {
-    public function getStationsList(Request $request): \Illuminate\Http\JsonResponse
-    {
-        $result = DB::select("select asu_obj_dis.pred_id, asu_obj_osn_inf.obj_osn_id, asu_obj_osn_inf.name from dbo.asu_obj_osn_inf left join dbo.asu_obj_dis on asu_obj_osn_inf.obj_osn_id = asu_obj_dis.obj_osn_id where asu_obj_dis.pred_id=? order by asu_obj_osn_inf.name",
-            [
-                $request->input("pred_id")
-            ]);
-        return response()->json($result);
-    }
-
-    public function getHistory(Request $request): \Illuminate\Http\JsonResponse
+    public function getHistory(Request $request): JsonResponse
     {
         (object)json_decode($request->getContent());
         $result = DB::select("select * from dbo.mtrx_trvtime where finish_date != '9999-12-12 00:00:00' and obj_osn_id_a=? and trvtype=? order by start_date desc limit 5",
@@ -28,7 +20,7 @@ class DeliveryController extends Controller
         return response()->json($result);
     }
 
-    public function getTimes(Request $request): \Illuminate\Http\JsonResponse
+    public function getTimes(Request $request): JsonResponse
     {
         DB::statement("drop table if exists vars;");
         DB::statement("create temp table vars (pred_id int not null, dt timestamp not null,type int not null);");
@@ -76,7 +68,7 @@ where
         return response()->json(json_decode($result));
     }
 
-    public function putTimes(Request $request): \Illuminate\Http\JsonResponse
+    public function putTimes(Request $request): JsonResponse
     {
         $json = (array)json_decode($request->getContent());
         foreach ($json as $item) {

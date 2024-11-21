@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\JsonResponse;
 
 class TroubleshootingController extends Controller
 {
-    public function putData(Request $request): \Illuminate\Http\JsonResponse
+    public function putData(Request $request): JsonResponse
     {
         try {
             $json = (array)json_decode($request->getContent());
@@ -70,7 +71,7 @@ class TroubleshootingController extends Controller
             return response()->json(['error' => $e->getMessage()]);
         }
     }
-    public function getData(Request $request): \Illuminate\Http\JsonResponse
+    public function getData(Request $request): JsonResponse
     {
         return response()->json(DB::select("
         SELECT
@@ -157,7 +158,7 @@ class TroubleshootingController extends Controller
                 $request->input("pred_id")
             ]));
     }
-    public function getHistory(Request $request): \Illuminate\Http\JsonResponse
+    public function getHistory(Request $request): JsonResponse
     {
         $result = DB::select("
               SELECT

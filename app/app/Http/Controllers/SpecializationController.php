@@ -6,10 +6,11 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\JsonResponse;
 
 class SpecializationController extends Controller
 {
-    public function getUser(Request $request): \Illuminate\Http\JsonResponse
+    public function getUser(Request $request): JsonResponse
     {
         $result = DB::select("
             SELECT dor.sname               AS dor_name,
@@ -48,7 +49,7 @@ class SpecializationController extends Controller
             ", [Auth::user()->pred_id]);
         return response()->json($result);
     }
-    public function getBrigade(Request $request): \Illuminate\Http\JsonResponse
+    public function getBrigade(Request $request): JsonResponse
     {
         return  response()->json(
             DB::select("

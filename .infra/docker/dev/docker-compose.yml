@@ -1,27 +1,39 @@
-version: '3'
-
-networks:
-  backend:
-    external: true
-
 services:
-  regulation:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
+    hostname: ${COMPOSE_PROJECT_NAME}_app
+    container_name: ${COMPOSE_PROJECT_NAME}_app
     ports:
       - "80:80"
-    env_file:
-      - ../.env
-    environment:
-      - APP_DEBUG=true
-      - APP_MODE=dev
-      - APP_NAME=regulation
-      - APP_URL=http://regulation
     volumes:
-      - ../app:/app/
-      - ../container/nginx/:/etc/nginx/http.d/
+      - ${PROJECT_DIR}/app:/app/
+      - ${PROJECT_DIR}/${INFRA_DIR}/nginx/:/etc/nginx/http.d/
     networks:
       - backend
-    deploy:
-      replicas: 1
+
+  database:
+    image: postgres:14.10-alpine
+    hostname: ${COMPOSE_PROJECT_NAME}_database
+    container_name: ${COMPOSE_PROJECT_NAME}_database
+    environment:
+      TZ: Europe/Moscow
+      POSTGRES_DB: "database"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "password"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+    restart: always
+
+networks:
+  backend:
+    name: ${COMPOSE_PROJECT_NAME}_backend
+
+volumes:
+  postgres_data:
+    name: ${COMPOSE_PROJECT_NAME}_postgres_data

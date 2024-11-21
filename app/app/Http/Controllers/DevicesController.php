@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\JsonResponse;
 
 class DevicesController extends Controller
 {
-    public function getDevices(Request $request): \Illuminate\Http\JsonResponse
+    public function list(Request $request): JsonResponse
     {
         return response()->json(DB::select("
             select
@@ -68,7 +68,7 @@ class DevicesController extends Controller
         ]));
     }
 
-    public function putDevices(Request $request): \Illuminate\Http\JsonResponse
+    public function update(Request $request): JsonResponse
     {
         try {
             $json = (array)json_decode($request->getContent());
