@@ -172,11 +172,11 @@ class TroubleshootingRepository implements Repository
         ]);
     }
 
-    public function findLatestReglament(string $predId, string $podrId, string $objOsnId, int $type)
+    public function findLatestReglament(TroubleshootingDTO $troubleshootingDTO)
     {
         return DB::select(
             "select * from dbo.mtrx_reglament where pred_id=? and podr_id=? and obj_osn_id=? and reglamenttype=? order by record_num desc limit 1",
-            [$predId, $podrId, $objOsnId, $type]
+            [$troubleshootingDTO->predId, $troubleshootingDTO->podrId, $troubleshootingDTO->objOsnId, $troubleshootingDTO->type]
         );
     }
 

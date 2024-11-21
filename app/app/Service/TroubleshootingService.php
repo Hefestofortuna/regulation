@@ -21,10 +21,7 @@ class TroubleshootingService
             $item->type = ObjectType::fromString($item->type);
 
             $existingReglament = $this->troubleshootingRepository->findLatestReglament(
-                $item->pred_id,
-                $item->podr_id,
-                $item->obj_osn_id,
-                $item->type
+                $item
             );
 
             if (!empty($existingReglament)) {
