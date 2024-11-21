@@ -6,11 +6,12 @@
     "type": "project",
     "require": {
         "php": "^8.0",
-        "laravel/lumen-framework": "^9.0",
-        "firebase/php-jwt": "^5.5"
+        "firebase/php-jwt": "^5.5",
+        "laravel/lumen-framework": "^9.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
+        "friendsofphp/php-cs-fixer": "^3.64",
         "mockery/mockery": "^1.4.4",
         "phpunit/phpunit": "^9.5.10"
     },
@@ -27,9 +28,7 @@
         }
     },
     "scripts": {
-        "post-root-package-install": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-        ]
+        "fix": "php8 vendor/bin/php-cs-fixer fix --config configs/.php-cs-fixer.dist.php --cache-file storage/cs/cs-fix.cache"
     },
     "config": {
         "optimize-autoloader": true,

@@ -1,0 +1,39 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    hostname: ${COMPOSE_PROJECT_NAME}_app
+    container_name: ${COMPOSE_PROJECT_NAME}_app
+    ports:
+      - "80:80"
+    volumes:
+      - ${PROJECT_DIR}/app:/app/
+      - ${PROJECT_DIR}/${INFRA_DIR}/nginx/:/etc/nginx/http.d/
+    networks:
+      - backend
+
+  database:
+    image: postgres:14.10-alpine
+    hostname: ${COMPOSE_PROJECT_NAME}_database
+    container_name: ${COMPOSE_PROJECT_NAME}_database
+    environment:
+      TZ: Europe/Moscow
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+    restart: always
+
+networks:
+  backend:
+    name: ${COMPOSE_PROJECT_NAME}_backend
+
+volumes:
+  postgres_data:
+    name: ${COMPOSE_PROJECT_NAME}_postgres_data
