@@ -24,35 +24,40 @@ class TroubleshootingController extends Controller
                     "ktsm" => 3221,
                     "uksps" => 3223,
                 };
-                $result = DB::select("select * from dbo.mtrx_reglament where pred_id=? and podr_id=? and obj_osn_id=? and reglamenttype=? order by record_num desc limit 1",[
+                $result = DB::select("select * from dbo.mtrx_reglament where pred_id=? and podr_id=? and obj_osn_id=? and reglamenttype=? order by record_num desc limit 1", [
                     $item->pred_id,
                     $item->podr_id,
                     $item->obj_osn_id,
                     $item->type,
                 ]);
-                if(!empty($result)) {
+                if (!empty($result)) {
                     $result = end($result);
-                    DB::update("UPDATE dbo.mtrx_reglament SET finish_date='" . date('Y-m-d H:i:s') . "'WHERE (pred_id=? and podr_id=? and obj_osn_id=? and reglamenttype=? and record_num=?);",
+                    DB::update(
+                        "UPDATE dbo.mtrx_reglament SET finish_date='" . date('Y-m-d H:i:s') . "'WHERE (pred_id=? and podr_id=? and obj_osn_id=? and reglamenttype=? and record_num=?);",
                         [
                             $result->pred_id,
                             $result->podr_id,
                             $result->obj_osn_id,
                             $result->reglamenttype,
                             $result->record_num
-                        ]);
-                    DB::insert("INSERT INTO dbo.mtrx_reglament(pred_id, podr_id, obj_osn_id, reglamenttype, record_num, reglamenttime, start_date, finish_date)VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
+                        ]
+                    );
+                    DB::insert(
+                        "INSERT INTO dbo.mtrx_reglament(pred_id, podr_id, obj_osn_id, reglamenttype, record_num, reglamenttime, start_date, finish_date)VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
                         [
                             $item->pred_id,
                             $item->podr_id,
                             $item->obj_osn_id,
                             $item->type,
-                            $result->record_num+1,
+                            $result->record_num + 1,
                             $item->value,
                             date('Y-m-d H:i:s'),
                             '9999-12-12 00:00:00'
-                        ]);
+                        ]
+                    );
                 } else {
-                    DB::insert("INSERT INTO dbo.mtrx_reglament(pred_id, podr_id, obj_osn_id, reglamenttype, record_num, reglamenttime, start_date, finish_date)VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
+                    DB::insert(
+                        "INSERT INTO dbo.mtrx_reglament(pred_id, podr_id, obj_osn_id, reglamenttype, record_num, reglamenttime, start_date, finish_date)VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
                         [
                             $item->pred_id,
                             $item->podr_id,
@@ -62,7 +67,8 @@ class TroubleshootingController extends Controller
                             $item->value,
                             date('Y-m-d H:i:s'),
                             '9999-12-12 00:00:00'
-                        ]);
+                        ]
+                    );
                 }
             }
             return response()->json(null, 200);
@@ -72,7 +78,8 @@ class TroubleshootingController extends Controller
     }
     public function getData(Request $request): \Illuminate\Http\JsonResponse
     {
-        return response()->json(DB::select("
+        return response()->json(DB::select(
+            "
         SELECT
             ope.pred_id,
             NULLIF(regexp_replace(asu_podr.sname, '\D','','g'), '')::numeric AS sort,
@@ -155,7 +162,8 @@ class TroubleshootingController extends Controller
             [
                 $request->input("pred_id"),
                 $request->input("pred_id")
-            ]));
+            ]
+        ));
     }
     public function getHistory(Request $request): \Illuminate\Http\JsonResponse
     {

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -10,21 +9,25 @@ class DeliveryController extends Controller
 {
     public function getStationsList(Request $request): \Illuminate\Http\JsonResponse
     {
-        $result = DB::select("select asu_obj_dis.pred_id, asu_obj_osn_inf.obj_osn_id, asu_obj_osn_inf.name from dbo.asu_obj_osn_inf left join dbo.asu_obj_dis on asu_obj_osn_inf.obj_osn_id = asu_obj_dis.obj_osn_id where asu_obj_dis.pred_id=? order by asu_obj_osn_inf.name",
+        $result = DB::select(
+            "select asu_obj_dis.pred_id, asu_obj_osn_inf.obj_osn_id, asu_obj_osn_inf.name from dbo.asu_obj_osn_inf left join dbo.asu_obj_dis on asu_obj_osn_inf.obj_osn_id = asu_obj_dis.obj_osn_id where asu_obj_dis.pred_id=? order by asu_obj_osn_inf.name",
             [
                 $request->input("pred_id")
-            ]);
+            ]
+        );
         return response()->json($result);
     }
 
     public function getHistory(Request $request): \Illuminate\Http\JsonResponse
     {
         (object)json_decode($request->getContent());
-        $result = DB::select("select * from dbo.mtrx_trvtime where finish_date != '9999-12-12 00:00:00' and obj_osn_id_a=? and trvtype=? order by start_date desc limit 5",
+        $result = DB::select(
+            "select * from dbo.mtrx_trvtime where finish_date != '9999-12-12 00:00:00' and obj_osn_id_a=? and trvtype=? order by start_date desc limit 5",
             [
                 $request->input("obj_osn_id_a"),
                 $request->input("trvtype")
-            ]);
+            ]
+        );
         return response()->json($result);
     }
 
@@ -80,24 +83,29 @@ where
     {
         $json = (array)json_decode($request->getContent());
         foreach ($json as $item) {
-            $result = DB::select("select * from dbo.mtrx_trvtime where trvtype=? and obj_osn_id_a=? and obj_osn_id_b=? order by record_num desc limit 1;",
+            $result = DB::select(
+                "select * from dbo.mtrx_trvtime where trvtype=? and obj_osn_id_a=? and obj_osn_id_b=? order by record_num desc limit 1;",
                 [
                     $item->trvtype,
                     $item->obj_osn_id_a,
                     $item->obj_osn_id_b
-                ]);
+                ]
+            );
             if (!empty($result)) {
                 $result = end($result);
                 if (($result->finish_date > date('Y-m-d H:i:s')) && ($result->trvtime != $item->trvtime)) {
-                    DB::update("UPDATE dbo.mtrx_trvtime SET finish_date=now() WHERE (pred_id = ? and obj_osn_id_a = ? and obj_osn_id_b = ? and record_num = ? and trvtype=?);",
+                    DB::update(
+                        "UPDATE dbo.mtrx_trvtime SET finish_date=now() WHERE (pred_id = ? and obj_osn_id_a = ? and obj_osn_id_b = ? and record_num = ? and trvtype=?);",
                         [
                             $result->pred_id,
                             $result->obj_osn_id_a,
                             $result->obj_osn_id_b,
                             $result->record_num,
                             $result->trvtype
-                        ]);
-                    DB::insert("INSERT INTO dbo.mtrx_trvtime(pred_id, obj_osn_id_a, obj_osn_id_b, record_num, trvtype, trvtime, start_date, finish_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
+                        ]
+                    );
+                    DB::insert(
+                        "INSERT INTO dbo.mtrx_trvtime(pred_id, obj_osn_id_a, obj_osn_id_b, record_num, trvtype, trvtime, start_date, finish_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
                         [
                             $item->pred_id,
                             $item->obj_osn_id_a,
@@ -106,10 +114,12 @@ where
                             $item->trvtype,
                             $item->trvtime,
                             date('Y-m-d H:i:s'), '9999-12-12 00:00:00'
-                        ]);
+                        ]
+                    );
                 }
             } else {
-                DB::insert("INSERT INTO dbo.mtrx_trvtime(pred_id, obj_osn_id_a, obj_osn_id_b, record_num, trvtype, trvtime, start_date, finish_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
+                DB::insert(
+                    "INSERT INTO dbo.mtrx_trvtime(pred_id, obj_osn_id_a, obj_osn_id_b, record_num, trvtype, trvtime, start_date, finish_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
                     [
                         $item->pred_id,
                         $item->obj_osn_id_a,
@@ -119,10 +129,11 @@ where
                         $item->trvtime,
                         date('Y-m-d H:i:s'),
                         '9999-12-12 00:00:00'
-                    ]);
+                    ]
+                );
             }
 
         }
-        return response()->json([],200);
+        return response()->json([], 200);
     }
 }
