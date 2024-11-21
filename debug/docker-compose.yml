@@ -1,0 +1,27 @@
+version: '3'
+
+networks:
+  backend:
+    external: true
+
+services:
+  regulation:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    env_file:
+      - ../.env
+    environment:
+      - APP_DEBUG=true
+      - APP_MODE=dev
+      - APP_NAME=regulation
+      - APP_URL=http://regulation
+    volumes:
+      - ../app:/app/
+      - ../container/nginx/:/etc/nginx/http.d/
+    networks:
+      - backend
+    deploy:
+      replicas: 1

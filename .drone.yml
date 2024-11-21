@@ -1,0 +1,37 @@
+kind: pipeline
+type: exec
+name: regulation
+platform:
+  os: linux
+  arch: amd64
+steps:
+  - name: Build image
+    commands:
+      - docker build -t regulation-test-${DRONE_BUILD_NUMBER} .
+  - name: Saving an image for later deployment to a production server
+    commands:
+      - docker tag regulation-test-${DRONE_BUILD_NUMBER} 10.246.141.4:5000/regulation:prod
+      - docker tag regulation-test-${DRONE_BUILD_NUMBER} 10.246.141.36:5000/regulation:test
+      - docker tag regulation-test-${DRONE_BUILD_NUMBER} 10.246.141.52:5000/regulation:dev
+      - docker save -o regulation_prod_test_dev_${DRONE_BUILD_NUMBER} 10.246.141.4:5000/regulation:prod 10.246.141.36:5000/regulation:test 10.246.141.52:5000/regulation:dev
+      - docker rmi 10.246.141.4:5000/regulation:prod
+      - docker rmi 10.246.141.36:5000/regulation:test
+      - docker rmi 10.246.141.52:5000/regulation:dev
+      - curl -T regulation_prod_test_dev_${DRONE_BUILD_NUMBER} ftp://192.168.1.10/ASTR/ --user anonymous:''
+    when:
+      branch: [prod]
+  - name: Push image in repo
+    commands:
+      - docker tag regulation-test-${DRONE_BUILD_NUMBER} 192.168.1.199:5000/regulation:dev
+      - docker rmi regulation-test-${DRONE_BUILD_NUMBER}
+      - docker push --all-tags 192.168.1.199:5000/regulation
+    when:
+      status: [ success ]
+  - name: Deploying service on working cluster
+    commands:
+      - docker service update --image 192.168.1.199:5000/regulation:dev dev_app_astr_regulation
+    when:
+      status: [ success ]
+  - name: We clean up after ourselves
+    commands:
+      - docker image prune --all --force
